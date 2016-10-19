@@ -3,7 +3,8 @@ FROM debian:8
 ARG JAVA_VERSION=7
 ARG RUNDECK_VERSION=2.6.9-1-GA
 
-RUN apt-get update && apt-get install -y wget curl openjdk-${JAVA_VERSION}-jdk openssh-client
+RUN apt-get clean && apt-get update
+RUN apt-get install --no-install-recommends -y wget curl openjdk-${JAVA_VERSION}-jdk openssh-client
 
 RUN echo deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main >/etc/apt/sources.list.d/ansible.list \
   && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367 \
