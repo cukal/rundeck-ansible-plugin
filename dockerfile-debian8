@@ -8,7 +8,7 @@ RUN apt-get install --no-install-recommends -y wget curl openjdk-${JAVA_VERSION}
 
 RUN echo deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main >/etc/apt/sources.list.d/ansible.list \
   && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367 \
-  && apt-get install -y ansible
+  && apt-get install --no-install-recommends -y ansible
 
 RUN wget http://dl.bintray.com/rundeck/rundeck-deb/rundeck-${RUNDECK_VERSION}.deb >/dev/null 2>&1 \
   && dpkg -i rundeck-${RUNDECK_VERSION}.deb \
@@ -18,7 +18,9 @@ RUN apt-get install -y xmlstarlet jq
 
 ADD . /plugin
 WORKDIR /plugin
-RUN chmod +x ./gradlew && ./gradlew jar
+
+# removed `chmod +x ./gradlew &&` due to https://github.com/docker/docker/issues/9547
+RUN ./gradlew jar
 
 RUN cp /plugin/build/libs/ansible-plugin-*.jar /var/lib/rundeck/libext/
 
