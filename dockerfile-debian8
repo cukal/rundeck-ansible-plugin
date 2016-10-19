@@ -1,0 +1,26 @@
+FROM debian:8
+
+ARG JAVA_VERSION=7
+ARG RUNDECK_VERSION=2.6.9-1-GA
+
+RUN apt-get update && apt-get install -y wget curl openjdk-${JAVA_VERSION}-jdk openssh-client
+
+RUN echo deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main >/etc/apt/sources.list.d/ansible.list \
+  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367 \
+  && apt-get install -y ansible
+
+RUN wget http://dl.bintray.com/rundeck/rundeck-deb/rundeck-${RUNDECK_VERSION}.deb >/dev/null 2>&1 \
+  && dpkg -i rundeck-${RUNDECK_VERSION}.deb \
+  && rm rundeck-${RUNDECK_VERSION}.deb
+
+RUN apt-get install -y xmlstarlet jq
+
+ADD . /plugin
+WORKDIR /plugin
+RUN chmod +x ./gradlew && ./gradlew jar
+
+RUN cp /plugin/build/libs/ansible-plugin-*.jar /var/lib/rundeck/libext/
+
+WORKDIR /plugin/src/test/resources/scripts/
+RUN chmod +x *.sh
+CMD ./tests.sh

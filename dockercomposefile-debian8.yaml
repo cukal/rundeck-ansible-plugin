@@ -1,0 +1,6 @@
+version: '2'
+services:
+  rundeck:
+    build:
+      context: .
+      dockerfile: dockerfile-debian8
