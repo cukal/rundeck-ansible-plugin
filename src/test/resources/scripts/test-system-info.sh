@@ -99,7 +99,7 @@ echo "OK"
 runurl="${APIURL}/system/info"
 params=""
 
-echo "TEST: ${runurl}?${params} (accept:json)..."
+echo "TEST: ${runurl}?${params} (accept:json) ..."
 
 
 # get listing
