@@ -496,6 +496,10 @@ public class AnsibleRunner {
         if (tempDirectory != null && !retainTempDirectory) {
           deleteTempDirectory(tempDirectory);
         }
+
+        if (tempVarsFile != null && !tempVarsFile.delete()) {
+          tempVarsFile.deleteOnExit();
+        }
     }
 
     return result;
